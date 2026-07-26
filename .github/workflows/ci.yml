@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Build the header-only library + benchmark + cut-in demo and run the CTest
+  # regression suite. Eigen3 (needed only by the MPC controller) comes from the
+  # system package manager on Linux and from vcpkg on Windows.
+  # ---------------------------------------------------------------------------
+  linux:
+    name: linux (${{ matrix.cc }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { cc: gcc,   cxx: g++ }
+          - { cc: clang, cxx: clang++ }
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Eigen3
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libeigen3-dev
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build -j
+      - name: Test (CTest)
+        run: ctest --test-dir build --output-on-failure
+      - name: Run benchmark (smoke)
+        run: ./build/path_tracking_compare data/reference_route.csv build/
+
+  windows:
+    name: windows (msvc)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Eigen3 (vcpkg)
+        run: vcpkg install eigen3:x64-windows
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
+      - name: Build
+        run: cmake --build build --config Release
+      - name: Test (CTest)
+        run: ctest --test-dir build -C Release --output-on-failure

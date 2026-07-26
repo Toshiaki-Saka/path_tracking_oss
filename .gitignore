@@ -1,0 +1,19 @@
+build/
+build_*/
+*.o
+*.obj
+*.exe
+trace_*.csv
+cutin_trace.csv
+comparison_summary.csv
+fig_*.png
+__pycache__/
+*.pyc
+
+# Committed report assets under docs_en/ and docs_ja/ are intentionally tracked;
+# the patterns above only ignore freshly generated copies in the repo root and
+# the build tree.
+!docs_en/fig_*.png
+!docs_en/comparison_summary.csv
+!docs_ja/fig_*.png
+!docs_ja/comparison_summary.csv
