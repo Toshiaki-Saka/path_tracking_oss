@@ -19,17 +19,17 @@ move from *geometric heuristics* to *model-predictive optimization* to
 
 ### The four steering laws at a glance
 
-$$
+```math
 \delta_{\mathrm{PP}} = \arctan\!\left(\frac{2L\sin\alpha}{\ell_d}\right)
 \qquad
 \delta_{\mathrm{Stanley}} = k_\psi\theta_e - \arctan\!\left(\frac{k\,e_f}{k_{\mathrm{soft}} + v}\right)
-$$
+```
 
-$$
+```math
 \delta_{\mathrm{MPC}} = \arctan(L\kappa) - K_0 z, \quad K_k = \frac{B^\top P_{k+1}A}{R + B^\top P_{k+1}B}
 \qquad
 \delta_{\mathrm{MPPI}} = \bar u_0 + \sum_k w_k\varepsilon^{(k)}_0,\quad w_k \propto e^{-S_k/\lambda}
-$$
+```
 
 Full derivations, closed-loop analysis, parameter tables and a comparison of the
 theory against the measured traces:

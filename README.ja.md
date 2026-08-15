@@ -19,17 +19,17 @@ Pure Pursuit → Stanley → MPC → MPPI という流れは、*幾何的ヒュ�
 
 ### 4 つの操舵則（概観）
 
-$$
+```math
 \delta_{\mathrm{PP}} = \arctan\!\left(\frac{2L\sin\alpha}{\ell_d}\right)
 \qquad
 \delta_{\mathrm{Stanley}} = k_\psi\theta_e - \arctan\!\left(\frac{k\,e_f}{k_{\mathrm{soft}} + v}\right)
-$$
+```
 
-$$
+```math
 \delta_{\mathrm{MPC}} = \arctan(L\kappa) - K_0 z, \quad K_k = \frac{B^\top P_{k+1}A}{R + B^\top P_{k+1}B}
 \qquad
 \delta_{\mathrm{MPPI}} = \bar u_0 + \sum_k w_k\varepsilon^{(k)}_0,\quad w_k \propto e^{-S_k/\lambda}
-$$
+```
 
 導出、閉ループ解析、パラメータ表、理論値と実測トレースの突き合わせは
 **[`docs_ja/algorithms.md`](docs_ja/algorithms.md)** にまとめてあります。
