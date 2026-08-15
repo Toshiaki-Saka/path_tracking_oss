@@ -17,6 +17,24 @@ The progression Pure Pursuit → Stanley → MPC → MPPI mirrors the historical
 move from *geometric heuristics* to *model-predictive optimization* to
 *sampling-based optimization*.
 
+### The four steering laws at a glance
+
+$$
+\delta_{\mathrm{PP}} = \arctan\!\left(\frac{2L\sin\alpha}{\ell_d}\right)
+\qquad
+\delta_{\mathrm{Stanley}} = k_\psi\theta_e - \arctan\!\left(\frac{k\,e_f}{k_{\mathrm{soft}} + v}\right)
+$$
+
+$$
+\delta_{\mathrm{MPC}} = \arctan(L\kappa) - K_0 z, \quad K_k = \frac{B^\top P_{k+1}A}{R + B^\top P_{k+1}B}
+\qquad
+\delta_{\mathrm{MPPI}} = \bar u_0 + \sum_k w_k\varepsilon^{(k)}_0,\quad w_k \propto e^{-S_k/\lambda}
+$$
+
+Full derivations, closed-loop analysis, parameter tables and a comparison of the
+theory against the measured traces:
+**[`docs_en/algorithms.md`](docs_en/algorithms.md)**.
+
 ## Repository layout
 
 ```
@@ -40,8 +58,10 @@ path_tracking_oss/
 ├── tests/path_tracking_tests.cpp   # regression tests (ctest)
 ├── tools/                      # route generator, matplotlib figure / animation scripts
 ├── data/reference_route.csv     # reference route (~1.0 km, synthetic)
-├── docs_en/                    # generated report / figures (English)
-└── docs_ja/                    # generated report / figures (Japanese)
+├── docs_en/                    # algorithm reference, report, figures (English)
+│   ├── algorithms.md           #   derivations, closed-loop analysis, parameters
+│   └── comparison_report.md    #   benchmark results and figures
+└── docs_ja/                    # same, in Japanese
 ```
 
 ## Dependencies

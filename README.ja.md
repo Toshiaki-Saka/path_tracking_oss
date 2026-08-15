@@ -17,6 +17,23 @@ Pure Pursuit → Stanley → MPC → MPPI という流れは、*幾何的ヒュ�
 から*モデル予測最適化*、そして*サンプリングに基づく最適化*へという歴史的な
 進展を反映しています。
 
+### 4 つの操舵則（概観）
+
+$$
+\delta_{\mathrm{PP}} = \arctan\!\left(\frac{2L\sin\alpha}{\ell_d}\right)
+\qquad
+\delta_{\mathrm{Stanley}} = k_\psi\theta_e - \arctan\!\left(\frac{k\,e_f}{k_{\mathrm{soft}} + v}\right)
+$$
+
+$$
+\delta_{\mathrm{MPC}} = \arctan(L\kappa) - K_0 z, \quad K_k = \frac{B^\top P_{k+1}A}{R + B^\top P_{k+1}B}
+\qquad
+\delta_{\mathrm{MPPI}} = \bar u_0 + \sum_k w_k\varepsilon^{(k)}_0,\quad w_k \propto e^{-S_k/\lambda}
+$$
+
+導出、閉ループ解析、パラメータ表、理論値と実測トレースの突き合わせは
+**[`docs_ja/algorithms.md`](docs_ja/algorithms.md)** にまとめてあります。
+
 ## リポジトリ構成
 
 ```
@@ -40,8 +57,10 @@ path_tracking_oss/
 ├── tests/path_tracking_tests.cpp   # 回帰テスト（ctest）
 ├── tools/                      # 経路生成・matplotlib による図／アニメーション生成スクリプト
 ├── data/reference_route.csv     # 基準経路（約 1.0 km、合成）
-├── docs_en/                    # 生成レポート／図（英語）
-└── docs_ja/                    # 生成レポート／図（日本語）
+├── docs_en/                    # アルゴリズム詳解・レポート・図（英語）
+│   ├── algorithms.md           #   導出、閉ループ解析、パラメータ
+│   └── comparison_report.md    #   ベンチマーク結果と図
+└── docs_ja/                    # 同上（日本語）
 ```
 
 ## 依存関係
