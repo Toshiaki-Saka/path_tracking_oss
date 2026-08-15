@@ -569,25 +569,34 @@ q^{*}(\tau) \;\propto\; \exp\!\left(-\frac{S(\tau)}{\lambda}\right) p(\tau)
 周期をまたいで保持されるノミナル系列 $`\bar u \in \mathbb{R}^N`$ を用いて、
 毎周期:
 
-1. **ウォームスタート（シフト）:** $`i < N-1`$ について $`\bar u_i \leftarrow \bar u_{i+1}`$。
-2. **サンプリング:** $`K`$ 本の摂動 $`\varepsilon^{(k)}_i \sim \mathcal N(0, \sigma^2)`$ を
-   生成し、$`u^{(k)}_i = \mathrm{clamp}(\bar u_i + \varepsilon^{(k)}_i, \pm\delta_{\max})`$。
-3. **ロールアウト:** 各系列を速度一定のまま運動学モデルで刻み $`T`$ で展開:
-   ```math
-   x \mathrel{+}= vT\cos\psi,\quad y \mathrel{+}= vT\sin\psi,\quad \psi \mathrel{+}= \frac{v\tan u_i}{L}T
-   ```
-4. **評価:**
-   ```math
-   S_k = \sum_{i=0}^{N-1}\Big(w_e\,e_i^2 + w_\psi\,\theta_{e,i}^2 + w_\delta\,{u^{(k)}_i}^2\Big)
-   ```
-5. **重み付け**（数値安定化のため $`S_{\min}`$ を差し引いた softmax）:
-   ```math
-   w_k = \frac{\exp\!\big(-(S_k - S_{\min})/\lambda\big)}{\sum_{j}\exp\!\big(-(S_j - S_{\min})/\lambda\big)}
-   ```
-6. **更新と適用:**
-   ```math
-   \bar u_i \leftarrow \mathrm{clamp}\Big(\bar u_i + \sum_{k} w_k\,\varepsilon^{(k)}_i\Big), \qquad \delta = \mathrm{rate\_limit}(\bar u_0)
-   ```
+**手順 1 — ウォームスタート（シフト）:** $`i < N-1`$ について $`\bar u_i \leftarrow \bar u_{i+1}`$。
+
+**手順 2 — サンプリング:** $`K`$ 本の摂動 $`\varepsilon^{(k)}_i \sim \mathcal N(0, \sigma^2)`$ を
+生成し、$`u^{(k)}_i = \mathrm{clamp}(\bar u_i + \varepsilon^{(k)}_i, \pm\delta_{\max})`$ とする。
+
+**手順 3 — ロールアウト:** 各系列を速度一定のまま運動学モデルで刻み $`T`$ で展開する。
+
+```math
+x \mathrel{+}= vT\cos\psi,\quad y \mathrel{+}= vT\sin\psi,\quad \psi \mathrel{+}= \frac{v\tan u_i}{L}T
+```
+
+**手順 4 — 評価:**
+
+```math
+S_k = \sum_{i=0}^{N-1}\Big(w_e\,e_i^2 + w_\psi\,\theta_{e,i}^2 + w_\delta\,{u^{(k)}_i}^2\Big)
+```
+
+**手順 5 — 重み付け**（数値安定化のため $`S_{\min}`$ を差し引いた softmax）:
+
+```math
+w_k = \frac{\exp\!\big(-(S_k - S_{\min})/\lambda\big)}{\sum_{j}\exp\!\big(-(S_j - S_{\min})/\lambda\big)}
+```
+
+**手順 6 — 更新と適用:**
+
+```math
+\bar u_i \leftarrow \mathrm{clamp}\Big(\bar u_i + \sum_{k} w_k\,\varepsilon^{(k)}_i\Big), \qquad \delta = \mathrm{rate\_limit}(\bar u_0)
+```
 
 既定値: $`K = 120`$ サンプル、$`N = 20`$ ステップ、$`T = 0.05\,\mathrm{s}`$
 （ホライズン 1.0 s）、$`\sigma = 0.08\,\mathrm{rad}`$、$`\lambda = 1.0`$、

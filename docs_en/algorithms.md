@@ -589,26 +589,35 @@ variance), $`\lambda \to \infty`$ averages everything and the update vanishes.
 Per cycle, with a nominal sequence $`\bar u \in \mathbb{R}^N`$ carried across
 cycles:
 
-1. **Warm start (shift):** $`\bar u_i \leftarrow \bar u_{i+1}`$ for $`i < N-1`$.
-2. **Sample** $`K`$ perturbations $`\varepsilon^{(k)}_i \sim \mathcal N(0, \sigma^2)`$ and form
-   $`u^{(k)}_i = \mathrm{clamp}(\bar u_i + \varepsilon^{(k)}_i, \pm\delta_{\max})`$.
-3. **Roll out** each sequence at constant speed through the kinematic model
-   with step $`T`$:
-   ```math
-   x \mathrel{+}= vT\cos\psi,\quad y \mathrel{+}= vT\sin\psi,\quad \psi \mathrel{+}= \frac{v\tan u_i}{L}T
-   ```
-4. **Score** each rollout:
-   ```math
-   S_k = \sum_{i=0}^{N-1}\Big(w_e\,e_i^2 + w_\psi\,\theta_{e,i}^2 + w_\delta\,{u^{(k)}_i}^2\Big)
-   ```
-5. **Weight** (softmax, shifted by $`S_{\min}`$ for numerical stability):
-   ```math
-   w_k = \frac{\exp\!\big(-(S_k - S_{\min})/\lambda\big)}{\sum_{j}\exp\!\big(-(S_j - S_{\min})/\lambda\big)}
-   ```
-6. **Update and apply:**
-   ```math
-   \bar u_i \leftarrow \mathrm{clamp}\Big(\bar u_i + \sum_{k} w_k\,\varepsilon^{(k)}_i\Big), \qquad \delta = \mathrm{rate\_limit}(\bar u_0)
-   ```
+**Step 1 — Warm start (shift):** $`\bar u_i \leftarrow \bar u_{i+1}`$ for $`i < N-1`$.
+
+**Step 2 — Sample** $`K`$ perturbations $`\varepsilon^{(k)}_i \sim \mathcal N(0, \sigma^2)`$ and form
+$`u^{(k)}_i = \mathrm{clamp}(\bar u_i + \varepsilon^{(k)}_i, \pm\delta_{\max})`$.
+
+**Step 3 — Roll out** each sequence at constant speed through the kinematic
+model with step $`T`$:
+
+```math
+x \mathrel{+}= vT\cos\psi,\quad y \mathrel{+}= vT\sin\psi,\quad \psi \mathrel{+}= \frac{v\tan u_i}{L}T
+```
+
+**Step 4 — Score** each rollout:
+
+```math
+S_k = \sum_{i=0}^{N-1}\Big(w_e\,e_i^2 + w_\psi\,\theta_{e,i}^2 + w_\delta\,{u^{(k)}_i}^2\Big)
+```
+
+**Step 5 — Weight** (softmax, shifted by $`S_{\min}`$ for numerical stability):
+
+```math
+w_k = \frac{\exp\!\big(-(S_k - S_{\min})/\lambda\big)}{\sum_{j}\exp\!\big(-(S_j - S_{\min})/\lambda\big)}
+```
+
+**Step 6 — Update and apply:**
+
+```math
+\bar u_i \leftarrow \mathrm{clamp}\Big(\bar u_i + \sum_{k} w_k\,\varepsilon^{(k)}_i\Big), \qquad \delta = \mathrm{rate\_limit}(\bar u_0)
+```
 
 Defaults: $`K = 120`$ samples, $`N = 20`$ steps, $`T = 0.05\,\mathrm{s}`$ (1.0 s
 horizon), $`\sigma = 0.08\,\mathrm{rad}`$, $`\lambda = 1.0`$, $`w_e = 8`$,
