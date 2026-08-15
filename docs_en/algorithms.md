@@ -152,7 +152,7 @@ steer along the circular arc that starts tangent to the vehicle and passes
 through it:
 
 ```math
-\alpha = \mathrm{wrap}\big(\operatorname{atan2}(y_{\mathrm{tgt}} - y,\; x_{\mathrm{tgt}} - x) - \psi\big),
+\alpha = \mathrm{wrap}\big(\mathrm{atan2}(y_{\mathrm{tgt}} - y,\; x_{\mathrm{tgt}} - x) - \psi\big),
 \qquad
 \delta = \arctan\!\left(\frac{2L\sin\alpha}{\ell_d}\right)
 ```
@@ -598,7 +598,7 @@ $`u^{(k)}_i = \mathrm{clamp}(\bar u_i + \varepsilon^{(k)}_i, \pm\delta_{\max})`$
 model with step $`T`$:
 
 ```math
-x \mathrel{+}= vT\cos\psi,\quad y \mathrel{+}= vT\sin\psi,\quad \psi \mathrel{+}= \frac{v\tan u_i}{L}T
+x \leftarrow x + vT\cos\psi,\quad y \leftarrow y + vT\sin\psi,\quad \psi \leftarrow \psi + \frac{v\tan u_i}{L}T
 ```
 
 **Step 4 — Score** each rollout:

@@ -147,7 +147,7 @@ a = \mathrm{clamp}\big(k_p\,(v_{\mathrm{ref},i^{*}} - v),\; -a_{\mathrm{dec}}^{\
 なす角 $`\alpha`$ を測り、車両に接して目標点を通る円弧に沿って操舵します:
 
 ```math
-\alpha = \mathrm{wrap}\big(\operatorname{atan2}(y_{\mathrm{tgt}} - y,\; x_{\mathrm{tgt}} - x) - \psi\big),
+\alpha = \mathrm{wrap}\big(\mathrm{atan2}(y_{\mathrm{tgt}} - y,\; x_{\mathrm{tgt}} - x) - \psi\big),
 \qquad
 \delta = \arctan\!\left(\frac{2L\sin\alpha}{\ell_d}\right)
 ```
@@ -577,7 +577,7 @@ q^{*}(\tau) \;\propto\; \exp\!\left(-\frac{S(\tau)}{\lambda}\right) p(\tau)
 **手順 3 — ロールアウト:** 各系列を速度一定のまま運動学モデルで刻み $`T`$ で展開する。
 
 ```math
-x \mathrel{+}= vT\cos\psi,\quad y \mathrel{+}= vT\sin\psi,\quad \psi \mathrel{+}= \frac{v\tan u_i}{L}T
+x \leftarrow x + vT\cos\psi,\quad y \leftarrow y + vT\sin\psi,\quad \psi \leftarrow \psi + \frac{v\tan u_i}{L}T
 ```
 
 **手順 4 — 評価:**
